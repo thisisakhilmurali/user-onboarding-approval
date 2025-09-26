@@ -1,0 +1,77 @@
+{
+  "info": {
+    "_postman_id": "c3d9d5f4-24d8-4b07-9c76-postman-gen-001",
+    "name": "User Onboarding & Approval API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for User Registration, Login, Current User, and Admin Approval/Rejection workflows"
+  },
+  "item": [
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Content-Type", "value": "application/json"} ],
+        "body": { "mode": "raw", "raw": "{\n  \"name\": \"Test User\",\n  \"email\": \"user1@example.com\",\n  \"password\": \"Password123\"\n}" },
+        "url": {"raw": "{{baseUrl}}/register", "host": ["{{baseUrl}}"], "path": ["register"]}
+      }
+    },
+    {
+      "name": "User Login",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Content-Type", "value": "application/json"} ],
+        "body": { "mode": "raw", "raw": "{\n  \"email\": \"user1@example.com\",\n  \"password\": \"Password123\"\n}" },
+        "url": {"raw": "{{baseUrl}}/login", "host": ["{{baseUrl}}"], "path": ["login"]}
+      },
+      "event": [ {"listen": "test", "script": {"exec": ["const json = pm.response.json();","if(json.token){ pm.collectionVariables.set('userToken', json.token); }"], "type": "text/javascript"}} ]
+    },
+    {
+      "name": "Admin Login",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Content-Type", "value": "application/json"} ],
+        "body": {"mode": "raw", "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"Admin@123\"\n}"},
+        "url": {"raw": "{{baseUrl}}/login", "host": ["{{baseUrl}}"], "path": ["login"]}
+      },
+      "event": [ {"listen": "test", "script": {"exec": ["const json = pm.response.json();","if(json.token){ pm.collectionVariables.set('adminToken', json.token); }"], "type": "text/javascript"}} ]
+    },
+    {
+      "name": "Current User (/me)",
+      "request": {
+        "method": "GET",
+        "header": [ {"key": "Authorization", "value": "Bearer {{userToken}}"} ],
+        "url": {"raw": "{{baseUrl}}/me", "host": ["{{baseUrl}}"], "path": ["me"]}
+      }
+    },
+    {
+      "name": "List Pending Users (Admin)",
+      "request": {
+        "method": "GET",
+        "header": [ {"key": "Authorization", "value": "Bearer {{adminToken}}"} ],
+        "url": {"raw": "{{baseUrl}}/admin/pending", "host": ["{{baseUrl}}"], "path": ["admin","pending"]}
+      }
+    },
+    {
+      "name": "Approve User (Admin)",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Authorization", "value": "Bearer {{adminToken}}"} ],
+        "url": {"raw": "{{baseUrl}}/admin/approve/{{userId}}", "host": ["{{baseUrl}}"], "path": ["admin","approve","{{userId}}"]}
+      }
+    },
+    {
+      "name": "Reject User (Admin)",
+      "request": {
+        "method": "POST",
+        "header": [ {"key": "Authorization", "value": "Bearer {{adminToken}}"} ],
+        "url": {"raw": "{{baseUrl}}/admin/reject/{{userId}}", "host": ["{{baseUrl}}"], "path": ["admin","reject","{{userId}}"]}
+      }
+    }
+  ],
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8083"},
+    {"key": "adminToken", "value": ""},
+    {"key": "userToken", "value": ""},
+    {"key": "userId", "value": "1"}
+  ]
+}
