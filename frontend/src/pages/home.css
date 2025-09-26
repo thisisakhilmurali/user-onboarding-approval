@@ -1,0 +1,4 @@
+/* Additional styles specific to Home page (optional) */
+.card h2 { margin-top:0; }
+.badge { text-transform:uppercase; }
+

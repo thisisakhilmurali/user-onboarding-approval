@@ -1,0 +1,5 @@
+.nav-bar .brand { font-weight:700; }
+.nav-bar a { position:relative; }
+.nav-bar a:hover { color: var(--primary); }
+.nav-bar button.btn-link { font-size:.85rem; }
+
